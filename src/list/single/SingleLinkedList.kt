@@ -14,8 +14,8 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
         this.header = SingleLinkedListNode()
         this.tail = SingleLinkedListNode()
 
-        this.header.next = this.tail
-        this.tail.next = null
+        this.header.nextNode = this.tail
+        this.tail.nextNode = null
 
         return this.header
     }
@@ -24,7 +24,7 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      * 是否为空表
      */
     override fun isEmpty(): Boolean {
-        return this.header.next == null || this.header.next!!.next == null
+        return this.header.nextNode == null || this.header.nextNode == this.tail
     }
 
     /**
@@ -36,15 +36,15 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
         }
 
         var n = this.header
-        var nn = n.next!!
+        var nn = n.nextNode!!
 
-        while (nn.next != null) {
-            n.next = null
+        while (nn.nextNode != null) {
+            n.nextNode = null
             n = nn
-            nn = n.next!!
+            nn = n.nextNode!!
         }
 
-        this.header.next = this.tail
+        this.header.nextNode = this.tail
     }
 
     /**
@@ -55,12 +55,12 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
             return null
         }
 
-        var node = this.header.next!!
-        while (node.next != null) {
+        var node = this.header.nextNode!!
+        while (node.nextNode != null) {
             if (node.data == elem.data) {
                 return node
             }
-            node = node.next!!
+            node = node.nextNode!!
         }
 
         return null
@@ -74,14 +74,14 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
             return 0
         }
 
-        var node = this.header.next!!
+        var node = this.header.nextNode!!
         var i = 1
 
-        while (node.next != null) {
-            if (node.next != null && node.data == elem.data) {
+        while (node.nextNode != null) {
+            if (node.nextNode != null && node.data == elem.data) {
                 return i
             }
-            node = node.next!!
+            node = node.nextNode!!
             i++
         }
 
@@ -102,11 +102,11 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      */
     override fun delete(elem: SingleLinkedListNode) {
         var n = this.header
-        while (n.next != null && n.next!!.next != null) {
-            if (n.next!!.data == elem.data) {
-                n.next = n.next!!.next
+        while (n.nextNode != null && n.nextNode!!.nextNode != null) {
+            if (n.nextNode!!.data == elem.data) {
+                n.nextNode = n.nextNode!!.nextNode
             }
-            n = n.next!!
+            n = n.nextNode!!
         }
     }
 
@@ -118,11 +118,11 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
             return 0
         }
 
-        var n = this.header.next!!
+        var n = this.header.nextNode!!
         var i = 0
-        while (n.next != null) {
+        while (n.nextNode != null) {
             i++
-            n = n.next!!
+            n = n.nextNode!!
         }
 
         return i
@@ -132,13 +132,13 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      * 输出链表信息
      */
     override fun show() {
-        var n = this.header.next!!
 
         print("SingleLinkedList: header --> ")
 
-        while (n.next != null) {
+        var n = this.header.nextNode!!
+        while (n.nextNode != null) {
             print("${n.data} --> ")
-            n = n.next!!
+            n = n.nextNode!!
         }
 
         print("tail")
@@ -149,8 +149,8 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      * 头插法
      */
     private fun insertInHeader(elem: SingleLinkedListNode) {
-        elem.next = this.header.next
-        this.header.next = elem
+        elem.nextNode = this.header.nextNode
+        this.header.nextNode = elem
     }
 
     /**
@@ -158,11 +158,11 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      */
     private fun insertInTail(elem: SingleLinkedListNode) {
         var n = this.header
-        while (n.next != null && n.next!!.next != null) {
-            n = n.next!!
+        while (n.nextNode != null && n.nextNode!!.nextNode != null) {
+            n = n.nextNode!!
         }
 
-        elem.next = n.next
-        n.next = elem
+        elem.nextNode = n.nextNode
+        n.nextNode = elem
     }
 }
