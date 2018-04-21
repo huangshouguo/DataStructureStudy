@@ -24,7 +24,7 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      * 是否为空表
      */
     override fun isEmpty(): Boolean {
-        return this.header.nextNode == null || this.header.nextNode == this.tail
+        return this.header.nextNode == this.tail
     }
 
     /**
@@ -35,16 +35,14 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
             return
         }
 
-        var n = this.header
-        var nn = n.nextNode!!
+        var node = this.header.nextNode
 
-        while (nn.nextNode != null) {
-            n.nextNode = null
-            n = nn
-            nn = n.nextNode!!
+        while (node != this.tail) {
+            val next = node!!.nextNode
+            node!!.nextNode = null
+            this.header.nextNode = next
+            node = this.header.nextNode
         }
-
-        this.header.nextNode = this.tail
     }
 
     /**
@@ -56,7 +54,7 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
         }
 
         var node = this.header.nextNode!!
-        while (node.nextNode != null) {
+        while (node != this.tail) {
             if (node.data == elem.data) {
                 return node
             }
@@ -77,12 +75,12 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
         var node = this.header.nextNode!!
         var i = 1
 
-        while (node.nextNode != null) {
-            if (node.nextNode != null && node.data == elem.data) {
+        while (node.nextNode != this.tail) {
+            if (node.data == elem.data) {
                 return i
             }
-            node = node.nextNode!!
             i++
+            node = node.nextNode!!
         }
 
         return 0
@@ -101,12 +99,19 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      * 删除给定元素节点
      */
     override fun delete(elem: SingleLinkedListNode) {
-        var n = this.header
-        while (n.nextNode != null && n.nextNode!!.nextNode != null) {
-            if (n.nextNode!!.data == elem.data) {
-                n.nextNode = n.nextNode!!.nextNode
+        if (isEmpty()) {
+            return
+        }
+
+        var pre = this.header
+        var node = pre.nextNode
+        while (node != this.tail) {
+            if (node!!.data == elem.data) {
+                val next = node!!.nextNode
+                node!!.nextNode = null
+                pre.nextNode = next
+                break
             }
-            n = n.nextNode!!
         }
     }
 
@@ -118,27 +123,27 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
             return 0
         }
 
-        var n = this.header.nextNode!!
-        var i = 0
-        while (n.nextNode != null) {
-            i++
-            n = n.nextNode!!
+        var node = this.header.nextNode!!
+        var length = 0
+
+        while (node != this.tail) {
+            length++
+            node = node.nextNode!!
         }
 
-        return i
+        return length
     }
 
     /**
      * 输出链表信息
      */
     override fun show() {
-
         print("SingleLinkedList: header --> ")
 
-        var n = this.header.nextNode!!
-        while (n.nextNode != null) {
-            print("${n.data} --> ")
-            n = n.nextNode!!
+        var node = this.header.nextNode!!
+        while (node != this.tail) {
+            print("${node.data} --> ")
+            node = node.nextNode!!
         }
 
         print("tail")
@@ -157,12 +162,15 @@ class SingleLinkedList : IListContract<SingleLinkedListNode> {
      * 尾插法
      */
     private fun insertInTail(elem: SingleLinkedListNode) {
-        var n = this.header
-        while (n.nextNode != null && n.nextNode!!.nextNode != null) {
-            n = n.nextNode!!
+        var pre = this.header
+        var node = pre.nextNode
+
+        while (node != this.tail) {
+            pre = node!!
+            node = pre.nextNode
         }
 
-        elem.nextNode = n.nextNode
-        n.nextNode = elem
+        elem.nextNode = node
+        pre.nextNode = elem
     }
 }
